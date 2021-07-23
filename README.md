@@ -26,5 +26,5 @@ fact.fm: Int# {720}
 fact.fm: Int# {5040}
 fact.fm: Int# {40320}
 fact.fm: Int# {362880}
-fact {10}: Int# {3628800}
+result: Int# {3628800}
 ```

@@ -4,7 +4,7 @@ import { nonNull, counter } from './utils';
 export const evaluate = (expr: Expr): void => {
   const stacks = {
     args: [],
-    returns: [],
+    returns: [{ env: {}, alts: [TraceAlt] }],
     updates: [],
   };
   let code: Code | null = Eval(expr, {});
@@ -72,7 +72,7 @@ const val = (atom: Atom, env: Env): Value => {
   }
 
   const val = env[atom];
-  if (typeof val === 'undefined') {
+  if (val === undefined) {
     throw new Error(`Unbound variable: ${atom}`);
   }
 
@@ -127,7 +127,7 @@ const Eval = (expr: Expr, env: Env): Code => ({
 const Enter = (closure: Closure): Code => ({
   step(stacks) {
     if (closure.updating) {
-      throw new Error('<<loop>>');
+      throw new Error('Enter blackhole');
     }
 
     // Partial application
@@ -368,3 +368,19 @@ export const DefAlt = (expr: Expr): Alt => ({
     return (env) => Eval(expr, env);
   },
 });
+
+// for displaying the final result
+export const TraceAlt: Alt = {
+  matchCon(con) {
+    return (_env, args) => {
+      console.log(`result: ${con} {${args.join(', ')}}`);
+      return null;
+    };
+  },
+  matchLit(lit) {
+    return () => {
+      console.log(`result: ${lit}`);
+      return null;
+    };
+  },
+};

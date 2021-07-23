@@ -48,12 +48,8 @@ const fact10 = Stg.Let(
       ])
     ),
     ten: Prelude.Int(10),
-    fact10: Stg.Trace(
-      'fact {10}',
-      Stg.LF(['fact', 'ten'], true, [], Stg.VarApp('fact', ['ten']))
-    ),
   },
-  Stg.VarApp('fact10', [])
+  Stg.VarApp('fact', ['ten'])
 );
 
 const length10 = Stg.Let(
@@ -72,12 +68,8 @@ const length10 = Stg.Let(
       [],
       Stg.VarApp('take', ['ten', 'xs'])
     ),
-    n: Stg.Trace(
-      'n',
-      Stg.LF(['length', 'ys'], true, [], Stg.VarApp('length', ['ys']))
-    ),
   },
-  Stg.VarApp('n', [])
+  Stg.VarApp('length', ['ys'])
 );
 
 const incinc = Stg.Let(
@@ -92,12 +84,8 @@ const incinc = Stg.Let(
       [],
       Stg.VarApp('compose', ['inc', 'inc'])
     ),
-    three: Stg.Trace(
-      'three',
-      Stg.LF(['one', 'incinc'], true, [], Stg.VarApp('incinc', ['one']))
-    ),
   },
-  Stg.VarApp('three', [])
+  Stg.VarApp('incinc', ['one'])
 );
 
 function main() {
