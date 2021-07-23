@@ -134,7 +134,7 @@ const Enter = (closure: Closure): Code => ({
     if (stacks.args.length < closure.lf.args.length) {
       const updFrame = stacks.updates.shift();
       if (!updFrame) {
-        throw new Error('??');
+        return null;
       }
 
       const [args1, args2] = closure.lf.args.splitAt(stacks.args.length);
