@@ -370,7 +370,7 @@ export const DefAlt = (expr: Expr): Alt => ({
 });
 
 // for displaying the final result
-export const TraceAlt: Alt = {
+const TraceAlt: Alt = {
   matchCon(con) {
     return (_env, args) => {
       console.log(`result: ${con} {${args.join(', ')}}`);
