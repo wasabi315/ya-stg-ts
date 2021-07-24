@@ -1,5 +1,5 @@
 import * as Stg from './stg';
-import { counter } from './utils';
+import { unique } from './utils';
 
 // general functions
 export const seq = Stg.LF(
@@ -82,7 +82,7 @@ export const Cons = (x: Stg.Atom, xs: Stg.Atom) =>
   );
 
 export const List = (...xs: Stg.Atom[]) => {
-  const genFresh = () => `$List_${counter()}`;
+  const genFresh = () => `$List_${unique()}`;
 
   const binds: Stg.Binds = {};
   let fresh = genFresh();

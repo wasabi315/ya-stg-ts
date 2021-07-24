@@ -1,4 +1,4 @@
-import { nonNull, counter } from './utils';
+import { nonNull, unique } from './utils';
 
 // Evaluate a STG expression
 export const evaluate = (expr: Expr): void => {
@@ -83,17 +83,26 @@ const vals = (atoms: Atom[], env: Env): Value[] => {
   return atoms.map((atom) => val(atom, env));
 };
 
-const stdcon = (con: string, refs: Value[]): Closure => {
-  const free = Array.from({ length: refs.length }, () => `$fresh_${counter()}`);
+// xs \n {} -> c xs
+const stdcon = (con: string, arity: number): LF => {
+  const free = Array.from({ length: arity }, () => `$fresh_${unique()}`);
   return {
-    lf: {
-      free,
-      updatable: false,
-      args: [],
-      expr: ConApp(con, free),
-    },
-    refs,
-    updating: false,
+    free,
+    updatable: false,
+    args: [],
+    expr: ConApp(con, free),
+  };
+};
+
+// {f, x1, ..., xn} \n {} -> f {x1, ..., xn}
+const parapp = (arity: number): LF => {
+  const f = `$fresh_${unique()}`;
+  const xs = Array.from({ length: arity }, () => `$fresh_${unique()}`);
+  return {
+    free: [f, ...xs],
+    updatable: false,
+    args: [],
+    expr: VarApp(f, xs),
   };
 };
 
@@ -132,19 +141,15 @@ const Enter = (closure: Closure): Code => ({
 
     // Partial application
     if (stacks.args.length < closure.lf.args.length) {
+      console.log('parapp');
       const updFrame = stacks.updates.shift();
       if (!updFrame) {
         return null;
       }
 
-      const [args1, args2] = closure.lf.args.splitAt(stacks.args.length);
-      updFrame.target.lf.free = [...closure.lf.free, ...args1];
-      updFrame.target.refs = [...closure.refs, ...stacks.args];
-      updFrame.target.lf.updatable = false;
-      updFrame.target.lf.args = args2;
-      updFrame.target.lf.expr = closure.lf.expr;
+      updFrame.target.lf = parapp(stacks.args.length);
+      updFrame.target.refs = [closure, ...stacks.args];
       updFrame.target.updating = false;
-
       stacks.args = [...stacks.args, ...updFrame.args];
       stacks.returns = updFrame.returns;
 
@@ -198,9 +203,8 @@ const ReturnCon = (con: string, args: Value[]): Code => ({
       }
 
       // update closure
-      const repl = stdcon(con, args);
-      updFrame.target.lf = repl.lf;
-      updFrame.target.refs = repl.refs;
+      updFrame.target.lf = stdcon(con, args.length);
+      updFrame.target.refs = args;
       updFrame.target.updating = false;
 
       return ReturnCon(con, args);
@@ -348,7 +352,7 @@ export const PrimAlt = (lit1: number, expr: Expr): Alt => ({
 export const VarAlt = (v: string, expr: Expr): Alt => ({
   matchCon(con) {
     return (env, args) => {
-      env[v] = stdcon(con, args);
+      env[v] = { lf: stdcon(con, args.length), refs: args, updating: false };
       return Eval(expr, env);
     };
   },
