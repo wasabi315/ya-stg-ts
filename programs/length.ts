@@ -1,6 +1,23 @@
 import * as Stg from '../src/stg';
 import * as Prelude from '../src/prelude';
 
+/*
+
+letrec
+  add = <...omit>
+  sub = <...omit>
+  length = <...omit>
+  unit = ()
+  repeat = <...omit>
+  take = <...omit>
+  xs = {repeat, unit} \u {} -> repeat {unit}
+  ten = 10
+  ys = {take, ten, xs} \u {} -> take {ten, xs}
+in
+  length {ys}
+
+ */
+
 export default Stg.Let(
   {
     add: Prelude.add,

@@ -149,7 +149,6 @@ const Enter = (closure: Closure): Code => ({
 
     // Partial application
     if (stacks.args.length < closure.lf.args.length) {
-      console.log('parapp');
       const updFrame = stacks.updates.shift();
       if (!updFrame) {
         return null;

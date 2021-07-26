@@ -1,6 +1,29 @@
 import * as Stg from '../src/stg';
 import * as Prelude from '../src/prelude';
 
+/*
+
+letrec
+  sub = <...omit>
+  mul = <...omit>
+  fact = {sub, mul, fact} \n {n} ->
+    case n {} of
+      Int# {n#} ->
+        case n# {} of
+          0# -> Int# {1#}
+          _ ->
+            letrec
+              one = 1
+              m = {sub, n, one} \u {} -> sub {n, one}
+              fm = {fact, m} \u {} -> fact {m}
+            in
+              mul {n, fm}
+  ten = 10
+in
+  fact {10}
+
+ */
+
 export default Stg.Let(
   {
     sub: Prelude.sub,
