@@ -3,7 +3,7 @@ Yet another toy STG interpreter
 
 ## Example
 ```
-yarn start
+yarn start programs/fact.ts
 ```
 ```
 fact.m: Int# {9}

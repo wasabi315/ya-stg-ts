@@ -48,9 +48,17 @@ export type LF = {
   expr: Expr;
 };
 
-export interface Expr {
-  eval(env: Env, stacks: Stacks): Code | null;
+export class Expr {
+  eval: (env: Env, stacks: Stacks) => Code | null;
+
+  // wrap object literal with this constructor when defining expression
+  // in order to make using isExpr available
+  constructor(expr: Expr) {
+    this.eval = expr.eval;
+  }
 }
+
+export const isExpr = (x: unknown): x is Expr => x instanceof Expr;
 
 // return continuation if matching succeed
 interface Alt {
@@ -230,89 +238,95 @@ const ReturnInt = (n: number): Code => ({
   },
 });
 
-export const Let = (binds: Binds, expr: Expr): Expr => ({
-  eval(env) {
-    const closures: Closure[] = [...Object.entries(binds)].map(([v, lf]) => {
-      return (env[v] = { lf, refs: [], updating: false });
-    });
-    closures.forEach((closure) => {
-      closure.refs = vals(closure.lf.free, env);
-    });
+export const Let = (binds: Binds, expr: Expr): Expr =>
+  new Expr({
+    eval(env) {
+      const closures: Closure[] = [...Object.entries(binds)].map(([v, lf]) => {
+        return (env[v] = { lf, refs: [], updating: false });
+      });
+      closures.forEach((closure) => {
+        closure.refs = vals(closure.lf.free, env);
+      });
 
-    return Eval(expr, env);
-  },
-});
+      return Eval(expr, env);
+    },
+  });
 
-export const Case = (expr: Expr, alts: Alt[]): Expr => ({
-  eval(env, stacks) {
-    stacks.returns.unshift({ env: { ...env }, alts });
-    return Eval(expr, env);
-  },
-});
+export const Case = (expr: Expr, alts: Alt[]): Expr =>
+  new Expr({
+    eval(env, stacks) {
+      stacks.returns.unshift({ env: { ...env }, alts });
+      return Eval(expr, env);
+    },
+  });
 
-export const VarApp = (f: string, xs: Atom[]): Expr => ({
-  eval(env, stacks) {
-    const value = val(f, env);
-    const args = vals(xs, env);
+export const VarApp = (f: string, xs: Atom[]): Expr =>
+  new Expr({
+    eval(env, stacks) {
+      const value = val(f, env);
+      const args = vals(xs, env);
 
-    if (typeof value === 'number') {
-      return ReturnInt(value);
-    }
+      if (typeof value === 'number') {
+        return ReturnInt(value);
+      }
 
-    stacks.args = [...args, ...stacks.args];
-    return Enter(value);
-  },
-});
+      stacks.args = [...args, ...stacks.args];
+      return Enter(value);
+    },
+  });
 
-export const ConApp = (con: string, xs: Atom[]): Expr => ({
-  eval(env) {
-    return ReturnCon(con, vals(xs, env));
-  },
-});
+export const ConApp = (con: string, xs: Atom[]): Expr =>
+  new Expr({
+    eval(env) {
+      return ReturnCon(con, vals(xs, env));
+    },
+  });
 
-export const PrimApp = (prim: string, xs: Atom[]): Expr => ({
-  eval(env) {
-    const args = vals(xs, env);
-    if (!args.every((v): v is number => typeof v === 'number')) {
-      throw new Error('Apply primitive function to non-primitive value');
-    }
-    if (args.length !== 2) {
-      throw new Error('Bad primitive function arity');
-    }
+export const PrimApp = (prim: string, xs: Atom[]): Expr =>
+  new Expr({
+    eval(env) {
+      const args = vals(xs, env);
+      if (!args.every((v): v is number => typeof v === 'number')) {
+        throw new Error('Apply primitive function to non-primitive value');
+      }
+      if (args.length !== 2) {
+        throw new Error('Bad primitive function arity');
+      }
 
-    let n: number;
-    switch (prim) {
-      case '+#':
-        n = args[0]! + args[1]!;
-        break;
-      case '-#':
-        n = args[0]! - args[1]!;
-        break;
-      case '*#':
-        n = args[0]! * args[1]!;
-        break;
-      case '/#':
-        n = args[0]! / args[1]!;
-        break;
-      default:
-        throw new Error(`Unknown prim op: ${prim}`);
-    }
+      let n: number;
+      switch (prim) {
+        case '+#':
+          n = args[0]! + args[1]!;
+          break;
+        case '-#':
+          n = args[0]! - args[1]!;
+          break;
+        case '*#':
+          n = args[0]! * args[1]!;
+          break;
+        case '/#':
+          n = args[0]! / args[1]!;
+          break;
+        default:
+          throw new Error(`Unknown prim op: ${prim}`);
+      }
 
-    return ReturnInt(n);
-  },
-});
+      return ReturnInt(n);
+    },
+  });
 
-export const Lit = (n: number): Expr => ({
-  eval() {
-    return ReturnInt(n);
-  },
-});
+export const Lit = (n: number): Expr =>
+  new Expr({
+    eval() {
+      return ReturnInt(n);
+    },
+  });
 
-export const Undefined: Expr = {
+export const Undefined: Expr = new Expr({
   eval() {
     throw new Error('Undefined evaluated');
   },
-};
+});
 
 export const AlgAlt = (con1: string, vars: string[], expr: Expr): Alt => ({
   matchCon(con2) {
