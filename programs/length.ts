@@ -1,4 +1,4 @@
-import { Stg, Prelude } from "../src/stg/mod.ts";
+import { Prelude, Stg } from "../src/stg/mod.ts";
 
 /*
 
@@ -31,8 +31,8 @@ export default Stg.Let(
       ["take", "ten", "xs"],
       true,
       [],
-      Stg.VarApp("take", ["ten", "xs"])
+      Stg.VarApp("take", ["ten", "xs"]),
     ),
   },
-  Stg.VarApp("length", ["ys"])
+  Stg.VarApp("length", ["ys"]),
 );

@@ -4,7 +4,7 @@ declare global {
 
     findMap<S>(
       callbackfn: (value: T, index: number, array: T[]) => S | null | undefined,
-      thisArg?: unknown
+      thisArg?: unknown,
     ): S | undefined;
   }
 }
@@ -19,7 +19,7 @@ Array.prototype.zip = function (other) {
 Array.prototype.findMap = function (callbackfn, thisArg) {
   return (
     this.map(callbackfn, thisArg).find(
-      (value) => value !== null && typeof value !== "undefined"
+      (value) => value !== null && typeof value !== "undefined",
     ) ?? undefined
   );
 };

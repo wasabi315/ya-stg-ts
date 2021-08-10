@@ -1,4 +1,4 @@
-import { Stg, Prelude } from "../src/stg/mod.ts";
+import { Prelude, Stg } from "../src/stg/mod.ts";
 
 /*
 
@@ -47,22 +47,22 @@ export default Stg.Let(
                       ["n", "sub", "one"],
                       true,
                       [],
-                      Stg.VarApp("sub", ["n", "one"])
-                    )
+                      Stg.VarApp("sub", ["n", "one"]),
+                    ),
                   ),
                   fm: Stg.Trace(
                     "fact.fm",
-                    Stg.LF(["m", "fact"], true, [], Stg.VarApp("fact", ["m"]))
+                    Stg.LF(["m", "fact"], true, [], Stg.VarApp("fact", ["m"])),
                   ),
                 },
-                Stg.VarApp("mul", ["n", "fm"])
-              )
+                Stg.VarApp("mul", ["n", "fm"]),
+              ),
             ),
-          ])
+          ]),
         ),
-      ])
+      ]),
     ),
     ten: Prelude.Int(10),
   },
-  Stg.VarApp("fact", ["ten"])
+  Stg.VarApp("fact", ["ten"]),
 );

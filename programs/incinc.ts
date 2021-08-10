@@ -1,4 +1,4 @@
-import { Stg, Prelude } from "../src/stg/mod.ts";
+import { Prelude, Stg } from "../src/stg/mod.ts";
 
 /*
 
@@ -23,8 +23,8 @@ export default Stg.Let(
       ["compose", "inc"],
       true,
       [],
-      Stg.VarApp("compose", ["inc", "inc"])
+      Stg.VarApp("compose", ["inc", "inc"]),
     ),
   },
-  Stg.VarApp("incinc", ["one"])
+  Stg.VarApp("incinc", ["one"]),
 );
