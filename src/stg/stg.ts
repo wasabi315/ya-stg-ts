@@ -132,6 +132,14 @@ export const Trace = (key: string, lf: LF): LF => ({
   key,
 });
 
+const traceWHNF = (key: string, con: string, args: Value[]) => {
+  console.log(`${key}: ${con} {${args.join(", ")}}`);
+};
+
+const traceLit = (key: string, lit: number) => {
+  console.log(`${key}: ${lit}`);
+};
+
 //
 // Semantics
 //
@@ -207,7 +215,7 @@ const ReturnCon = (con: string, args: Value[]): Code => ({
 
       // trace
       if (updFrame.target.lf.key) {
-        console.log(`${updFrame.target.lf.key}: ${con} {${args.join(", ")}}`);
+        traceWHNF(updFrame.target.lf.key, con, args);
       }
 
       // update closure
@@ -290,7 +298,7 @@ export const PrimApp = (prim: string, xs: Atom[]): Expr =>
         throw new Error("Apply primitive function to non-primitive value");
       }
       if (args.length !== 2) {
-        throw new Error("Bad primitive function arity");
+        throw new Error("Unsaturated primitive function application");
       }
 
       let n: number;
@@ -308,7 +316,7 @@ export const PrimApp = (prim: string, xs: Atom[]): Expr =>
           n = args[0]! / args[1]!;
           break;
         default:
-          throw new Error(`Unknown prim op: ${prim}`);
+          throw new Error(`Unknown prim op: ${prim}/2`);
       }
 
       return ReturnInt(n);
@@ -347,13 +355,17 @@ export const AlgAlt = (con1: string, vars: string[], expr: Expr): Alt => ({
     };
   },
   matchLit() {
-    throw new Error("Bad alternative");
+    throw new Error(
+      "Bad alternative: A primitive value was checked against an algebraic alternative"
+    );
   },
 });
 
 export const PrimAlt = (lit1: number, expr: Expr): Alt => ({
   matchCon() {
-    throw new Error("Bad alternative");
+    throw new Error(
+      "Bad alternative: A non-primitive value was checked against a primitive alternative"
+    );
   },
   matchLit(lit2) {
     if (lit1 !== lit2) {
@@ -391,13 +403,13 @@ export const DefAlt = (expr: Expr): Alt => ({
 const TraceAlt: Alt = {
   matchCon(con) {
     return (_env, args) => {
-      console.log(`result: ${con} {${args.join(", ")}}`);
+      traceWHNF("result", con, args);
       return null;
     };
   },
   matchLit(lit) {
     return () => {
-      console.log(`result: ${lit}`);
+      traceLit("result", lit);
       return null;
     };
   },
