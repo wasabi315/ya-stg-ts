@@ -3,8 +3,7 @@ declare global {
     zip<S>(other: S[]): [T, S][];
 
     findMap<S>(
-      callbackfn: (value: T, index: number, array: T[]) => S | null | undefined,
-      thisArg?: unknown,
+      callbackfn: (value: T, index: number, array: T[]) => S | null | undefined
     ): S | undefined;
   }
 }
@@ -16,11 +15,10 @@ Array.prototype.zip = function (other) {
   ]);
 };
 
-Array.prototype.findMap = function (callbackfn, thisArg) {
-  return (
-    this.map(callbackfn, thisArg).find(
-      (value) => value !== null && typeof value !== "undefined",
-    ) ?? undefined
+Array.prototype.findMap = function (callbackfn) {
+  return this.reduce(
+    (acc, value, index, array) => acc ?? callbackfn(value, index, array),
+    undefined
   );
 };
 
