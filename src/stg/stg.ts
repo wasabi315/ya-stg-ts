@@ -10,7 +10,7 @@ export const evaluate = (expr: Expr): void => {
   };
   let code: Code | null = Eval(expr, {});
 
-  while ((code = code.step(stacks)));
+  while ((code = code.exec(stacks)));
 };
 
 //
@@ -18,7 +18,7 @@ export const evaluate = (expr: Expr): void => {
 //
 
 interface Code {
-  step(stacks: Stacks): Code | null;
+  exec(stacks: Stacks): Code | null;
 }
 
 type Stacks = {
@@ -119,7 +119,7 @@ export const LF = (
   free: string[],
   updatable: boolean,
   args: string[],
-  expr: Expr,
+  expr: Expr
 ): LF => ({
   free,
   updatable,
@@ -137,13 +137,13 @@ export const Trace = (key: string, lf: LF): LF => ({
 //
 
 const Eval = (expr: Expr, env: Env): Code => ({
-  step(stacks) {
+  exec(stacks) {
     return expr.eval(env, stacks);
   },
 });
 
 const Enter = (closure: Closure): Code => ({
-  step(stacks) {
+  exec(stacks) {
     if (closure.updating) {
       throw new Error("Enter blackhole");
     }
@@ -188,7 +188,7 @@ const Enter = (closure: Closure): Code => ({
 });
 
 const ReturnCon = (con: string, args: Value[]): Code => ({
-  step(stacks) {
+  exec(stacks) {
     const retFrame = stacks.returns.shift();
     if (retFrame) {
       const cont = retFrame.alts.findMap((alt) => alt.matchCon(con));
@@ -223,7 +223,7 @@ const ReturnCon = (con: string, args: Value[]): Code => ({
 });
 
 const ReturnInt = (n: number): Code => ({
-  step(stacks) {
+  exec(stacks) {
     const frame = stacks.returns.shift();
     if (!frame) {
       throw new Error("ReturnInt with empty stack");
