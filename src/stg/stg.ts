@@ -1,5 +1,5 @@
 import { unique } from "./utils.ts";
-import "./extensions/array.ts";
+import "../extensions/array.ts";
 
 // Evaluate a STG expression
 export const evaluate = (expr: Expr): void => {

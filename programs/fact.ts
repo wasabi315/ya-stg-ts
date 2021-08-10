@@ -1,5 +1,4 @@
-import * as Stg from "../src/stg.ts";
-import * as Prelude from "../src/prelude.ts";
+import { Stg, Prelude } from "../src/stg/mod.ts";
 
 /*
 

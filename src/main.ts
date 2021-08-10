@@ -1,4 +1,4 @@
-import * as Stg from "./stg.ts";
+import { Stg } from "./stg/mod.ts";
 import { path } from "./deps.ts";
 
 async function main() {

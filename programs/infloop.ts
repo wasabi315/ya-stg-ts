@@ -1,4 +1,4 @@
-import * as Stg from "../src/stg.ts";
+import { Stg } from "../src/stg/mod.ts";
 
 /*
 
