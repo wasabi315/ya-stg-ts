@@ -336,7 +336,7 @@ export const AlgAlt = (con1: string, vars: string[], expr: Expr): Alt => ({
 
     return (env, args) => {
       if (args.length !== vars.length) {
-        throw new Error("Bad constructor arity");
+        throw new Error("Unsaturated constructor application");
       }
 
       vars.zip(args).forEach(([v, a]) => {
