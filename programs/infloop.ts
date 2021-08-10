@@ -1,4 +1,4 @@
-import * as Stg from '../src/stg';
+import * as Stg from "../src/stg.ts";
 
 /*
 
@@ -11,7 +11,7 @@ in
 
 export default Stg.Let(
   {
-    inf: Stg.LF(['inf'], true, [], Stg.VarApp('inf', [])),
+    inf: Stg.LF(["inf"], true, [], Stg.VarApp("inf", [])),
   },
-  Stg.VarApp('inf', [])
+  Stg.VarApp("inf", []),
 );

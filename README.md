@@ -1,10 +1,13 @@
 # ya-stg-ts
+
 Yet another toy STG interpreter
 
 ## Example
+
 ```
 yarn start programs/fact.ts
 ```
+
 ```
 fact.m: Int# {9}
 fact.m: Int# {8}

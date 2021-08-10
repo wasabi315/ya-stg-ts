@@ -1,5 +1,5 @@
-import * as Stg from '../src/stg';
-import * as Prelude from '../src/prelude';
+import * as Stg from "../src/stg.ts";
+import * as Prelude from "../src/prelude.ts";
 
 /*
 
@@ -26,14 +26,14 @@ export default Stg.Let(
     unit: Prelude.Unit,
     repeat: Prelude.repeat,
     take: Prelude.take,
-    xs: Stg.LF(['unit', 'repeat'], true, [], Stg.VarApp('repeat', ['unit'])),
+    xs: Stg.LF(["unit", "repeat"], true, [], Stg.VarApp("repeat", ["unit"])),
     ten: Prelude.Int(10),
     ys: Stg.LF(
-      ['take', 'ten', 'xs'],
+      ["take", "ten", "xs"],
       true,
       [],
-      Stg.VarApp('take', ['ten', 'xs'])
+      Stg.VarApp("take", ["ten", "xs"]),
     ),
   },
-  Stg.VarApp('length', ['ys'])
+  Stg.VarApp("length", ["ys"]),
 );

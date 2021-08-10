@@ -16,7 +16,7 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "downlevelIteration": true,
-    "baseUrl": ".",
+    "baseUrl": "."
   },
   "include": [
     "src/**/*",

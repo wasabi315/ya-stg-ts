@@ -1,4 +1,4 @@
-import { nonNull, unique } from './utils';
+import { nonNull, unique } from "./utils.ts";
 
 // Evaluate a STG expression
 export const evaluate = (expr: Expr): void => {
@@ -75,7 +75,7 @@ export type Atom = string | number;
 //
 
 const val = (atom: Atom, env: Env): Value => {
-  if (typeof atom === 'number') {
+  if (typeof atom === "number") {
     return atom;
   }
 
@@ -118,7 +118,7 @@ export const LF = (
   free: string[],
   updatable: boolean,
   args: string[],
-  expr: Expr
+  expr: Expr,
 ): LF => ({
   free,
   updatable,
@@ -144,7 +144,7 @@ const Eval = (expr: Expr, env: Env): Code => ({
 const Enter = (closure: Closure): Code => ({
   step(stacks) {
     if (closure.updating) {
-      throw new Error('Enter blackhole');
+      throw new Error("Enter blackhole");
     }
 
     // Partial application
@@ -192,7 +192,7 @@ const ReturnCon = (con: string, args: Value[]): Code => ({
     if (retFrame) {
       const cont = retFrame.alts.map((alt) => alt.matchCon(con)).find(nonNull);
       if (!cont) {
-        throw new Error('No alternative matched');
+        throw new Error("No alternative matched");
       }
 
       return cont(retFrame.env, args);
@@ -206,7 +206,7 @@ const ReturnCon = (con: string, args: Value[]): Code => ({
 
       // trace
       if (updFrame.target.lf.key) {
-        console.log(`${updFrame.target.lf.key}: ${con} {${args.join(', ')}}`);
+        console.log(`${updFrame.target.lf.key}: ${con} {${args.join(", ")}}`);
       }
 
       // update closure
@@ -225,12 +225,12 @@ const ReturnInt = (n: number): Code => ({
   step(stacks) {
     const frame = stacks.returns.shift();
     if (!frame) {
-      throw new Error('ReturnInt with empty stack');
+      throw new Error("ReturnInt with empty stack");
     }
 
     const cont = frame.alts.map((alt) => alt.matchLit(n)).find(nonNull);
     if (!cont) {
-      throw new Error('No alternative matched');
+      throw new Error("No alternative matched");
     }
 
     return cont(frame.env);
@@ -265,7 +265,7 @@ export const VarApp = (f: string, xs: Atom[]): Expr =>
       const value = val(f, env);
       const args = vals(xs, env);
 
-      if (typeof value === 'number') {
+      if (typeof value === "number") {
         return ReturnInt(value);
       }
 
@@ -285,25 +285,25 @@ export const PrimApp = (prim: string, xs: Atom[]): Expr =>
   new Expr({
     eval(env) {
       const args = vals(xs, env);
-      if (!args.every((v): v is number => typeof v === 'number')) {
-        throw new Error('Apply primitive function to non-primitive value');
+      if (!args.every((v): v is number => typeof v === "number")) {
+        throw new Error("Apply primitive function to non-primitive value");
       }
       if (args.length !== 2) {
-        throw new Error('Bad primitive function arity');
+        throw new Error("Bad primitive function arity");
       }
 
       let n: number;
       switch (prim) {
-        case '+#':
+        case "+#":
           n = args[0]! + args[1]!;
           break;
-        case '-#':
+        case "-#":
           n = args[0]! - args[1]!;
           break;
-        case '*#':
+        case "*#":
           n = args[0]! * args[1]!;
           break;
-        case '/#':
+        case "/#":
           n = args[0]! / args[1]!;
           break;
         default:
@@ -323,7 +323,7 @@ export const Lit = (n: number): Expr =>
 
 export const Undefined: Expr = new Expr({
   eval() {
-    throw new Error('Undefined evaluated');
+    throw new Error("Undefined evaluated");
   },
 });
 
@@ -335,7 +335,7 @@ export const AlgAlt = (con1: string, vars: string[], expr: Expr): Alt => ({
 
     return (env, args) => {
       if (args.length !== vars.length) {
-        throw new Error('Bad constructor arity');
+        throw new Error("Bad constructor arity");
       }
 
       vars.zip(args).forEach(([v, a]) => {
@@ -346,13 +346,13 @@ export const AlgAlt = (con1: string, vars: string[], expr: Expr): Alt => ({
     };
   },
   matchLit() {
-    throw new Error('Bad alternative');
+    throw new Error("Bad alternative");
   },
 });
 
 export const PrimAlt = (lit1: number, expr: Expr): Alt => ({
   matchCon() {
-    throw new Error('Bad alternative');
+    throw new Error("Bad alternative");
   },
   matchLit(lit2) {
     if (lit1 !== lit2) {
@@ -390,7 +390,7 @@ export const DefAlt = (expr: Expr): Alt => ({
 const TraceAlt: Alt = {
   matchCon(con) {
     return (_env, args) => {
-      console.log(`result: ${con} {${args.join(', ')}}`);
+      console.log(`result: ${con} {${args.join(", ")}}`);
       return null;
     };
   },

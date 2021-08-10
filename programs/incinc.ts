@@ -1,5 +1,5 @@
-import * as Stg from '../src/stg';
-import * as Prelude from '../src/prelude';
+import * as Stg from "../src/stg.ts";
+import * as Prelude from "../src/prelude.ts";
 
 /*
 
@@ -19,13 +19,13 @@ export default Stg.Let(
     compose: Prelude.compose,
     add: Prelude.add,
     one: Prelude.Int(1),
-    inc: Stg.LF(['add', 'one'], true, [], Stg.VarApp('add', ['one'])),
+    inc: Stg.LF(["add", "one"], true, [], Stg.VarApp("add", ["one"])),
     incinc: Stg.LF(
-      ['compose', 'inc'],
+      ["compose", "inc"],
       true,
       [],
-      Stg.VarApp('compose', ['inc', 'inc'])
+      Stg.VarApp("compose", ["inc", "inc"]),
     ),
   },
-  Stg.VarApp('incinc', ['one'])
+  Stg.VarApp("incinc", ["one"]),
 );
