@@ -32,8 +32,8 @@ export default Stg.Let(
       ["take", "ten", "xs"],
       true,
       [],
-      Stg.VarApp("take", ["ten", "xs"]),
+      Stg.VarApp("take", ["ten", "xs"])
     ),
   },
-  Stg.VarApp("length", ["ys"]),
+  Stg.VarApp("length", ["ys"])
 );

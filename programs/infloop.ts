@@ -13,5 +13,5 @@ export default Stg.Let(
   {
     inf: Stg.LF(["inf"], true, [], Stg.VarApp("inf", [])),
   },
-  Stg.VarApp("inf", []),
+  Stg.VarApp("inf", [])
 );

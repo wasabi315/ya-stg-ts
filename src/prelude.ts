@@ -6,7 +6,7 @@ export const seq = Stg.LF(
   [],
   false,
   ["x", "y"],
-  Stg.Case(Stg.VarApp("x", []), [Stg.DefAlt(Stg.VarApp("y", []))]),
+  Stg.Case(Stg.VarApp("x", []), [Stg.DefAlt(Stg.VarApp("y", []))])
 );
 
 export const id = Stg.LF([], false, ["x"], Stg.VarApp("x", []));
@@ -21,8 +21,8 @@ export const fix = Stg.LF(
     {
       x: Stg.LF(["f", "x"], true, [], Stg.VarApp("f", ["x"])),
     },
-    Stg.VarApp("x", []),
-  ),
+    Stg.VarApp("x", [])
+  )
 );
 
 export const compose = Stg.LF(
@@ -33,8 +33,8 @@ export const compose = Stg.LF(
     {
       gx: Stg.LF(["g", "x"], true, [], Stg.VarApp("g", ["x"])),
     },
-    Stg.VarApp("f", ["gx"]),
-  ),
+    Stg.VarApp("f", ["gx"])
+  )
 );
 
 // Unit
@@ -59,11 +59,11 @@ const arithOp = (op: string) =>
             ["y#"],
             Stg.Case(Stg.PrimApp(op, ["x#", "y#"]), [
               Stg.VarAlt("z#", Stg.ConApp("Int#", ["z#"])),
-            ]),
+            ])
           ),
-        ]),
+        ])
       ),
-    ]),
+    ])
   );
 
 export const add = arithOp("+#");
@@ -78,7 +78,7 @@ export const Cons = (x: Stg.Atom, xs: Stg.Atom) =>
     [x, xs].filter((atom): atom is string => typeof atom === "string"),
     true,
     [],
-    Stg.ConApp("Cons", [x, xs]),
+    Stg.ConApp("Cons", [x, xs])
   );
 
 export const List = (...xs: Stg.Atom[]) => {
@@ -98,7 +98,7 @@ export const List = (...xs: Stg.Atom[]) => {
     xs.filter((atom): atom is string => typeof atom === "string"),
     true,
     [],
-    Stg.Let(binds, Stg.VarApp(fresh, [])),
+    Stg.Let(binds, Stg.VarApp(fresh, []))
   );
 };
 
@@ -116,10 +116,10 @@ export const length = Stg.LF(
           one: Int(1),
           n: Stg.LF(["length", "ys"], true, [], Stg.VarApp("length", ["ys"])),
         },
-        Stg.VarApp("add", ["n", "one"]),
-      ),
+        Stg.VarApp("add", ["n", "one"])
+      )
     ),
-  ]),
+  ])
 );
 
 export const repeat = Stg.LF(
@@ -130,8 +130,8 @@ export const repeat = Stg.LF(
     {
       xs: Cons("x", "xs"),
     },
-    Stg.VarApp("xs", []),
-  ),
+    Stg.VarApp("xs", [])
+  )
 );
 
 export const take = Stg.LF(
@@ -157,21 +157,21 @@ export const take = Stg.LF(
                     ["sub", "n", "one"],
                     true,
                     [],
-                    Stg.VarApp("sub", ["n", "one"]),
+                    Stg.VarApp("sub", ["n", "one"])
                   ),
                   zs: Stg.LF(
                     ["take", "m", "ys"],
                     true,
                     [],
-                    Stg.VarApp("take", ["m", "ys"]),
+                    Stg.VarApp("take", ["m", "ys"])
                   ),
                 },
-                Stg.ConApp("Cons", ["y", "zs"]),
-              ),
+                Stg.ConApp("Cons", ["y", "zs"])
+              )
             ),
-          ]),
+          ])
         ),
-      ]),
+      ])
     ),
-  ]),
+  ])
 );

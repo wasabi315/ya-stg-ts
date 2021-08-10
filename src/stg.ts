@@ -118,7 +118,7 @@ export const LF = (
   free: string[],
   updatable: boolean,
   args: string[],
-  expr: Expr,
+  expr: Expr
 ): LF => ({
   free,
   updatable,

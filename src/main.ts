@@ -1,5 +1,5 @@
 import * as Stg from "./stg.ts";
-import * as path from "https://deno.land/std@0.103.0/path/mod.ts";
+import { path } from "./deps.ts";
 
 async function main() {
   const file = Deno.args[0];

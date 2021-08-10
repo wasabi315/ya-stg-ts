@@ -24,8 +24,8 @@ export default Stg.Let(
       ["compose", "inc"],
       true,
       [],
-      Stg.VarApp("compose", ["inc", "inc"]),
+      Stg.VarApp("compose", ["inc", "inc"])
     ),
   },
-  Stg.VarApp("incinc", ["one"]),
+  Stg.VarApp("incinc", ["one"])
 );
