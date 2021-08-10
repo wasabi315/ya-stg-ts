@@ -181,6 +181,7 @@ const Enter = (closure: Closure): Code => ({
     });
 
     if (closure.lf.updatable) {
+      // save stacks
       stacks.updates.unshift({
         args: stacks.args,
         returns: stacks.returns,
@@ -188,6 +189,8 @@ const Enter = (closure: Closure): Code => ({
       });
       stacks.args = [];
       stacks.returns = [];
+
+      // set blackhole
       closure.updating = true;
     }
 
