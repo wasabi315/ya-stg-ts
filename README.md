@@ -2,10 +2,13 @@
 
 Yet another toy STG interpreter
 
+## Prerequisite
+- deno
+
 ## Example
 
 ```
-yarn start programs/fact.ts
+deno run --allow-read src/main.ts programs/fact.ts
 ```
 
 ```
