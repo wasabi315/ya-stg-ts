@@ -1,4 +1,5 @@
-import { nonNull, unique } from "./utils.ts";
+import { unique } from "./utils.ts";
+import "./extensions/array.ts";
 
 // Evaluate a STG expression
 export const evaluate = (expr: Expr): void => {
@@ -190,7 +191,7 @@ const ReturnCon = (con: string, args: Value[]): Code => ({
   step(stacks) {
     const retFrame = stacks.returns.shift();
     if (retFrame) {
-      const cont = retFrame.alts.map((alt) => alt.matchCon(con)).find(nonNull);
+      const cont = retFrame.alts.findMap((alt) => alt.matchCon(con));
       if (!cont) {
         throw new Error("No alternative matched");
       }
@@ -228,7 +229,7 @@ const ReturnInt = (n: number): Code => ({
       throw new Error("ReturnInt with empty stack");
     }
 
-    const cont = frame.alts.map((alt) => alt.matchLit(n)).find(nonNull);
+    const cont = frame.alts.findMap((alt) => alt.matchLit(n));
     if (!cont) {
       throw new Error("No alternative matched");
     }
