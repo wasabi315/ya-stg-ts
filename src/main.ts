@@ -4,21 +4,12 @@ import { path } from "./deps.ts";
 async function main() {
   const file = Deno.args[0];
   if (!file) {
-    console.error("Please input a path to STG program");
-    return Deno.exit(1);
+    throw new Error("Please input a path to STG program");
   }
 
-  let expr: unknown;
-  try {
-    expr = (await import(path.resolve(file))).default;
-  } catch (err: unknown) {
-    console.error(err instanceof Error ? err.message : err);
-    return Deno.exit(1);
-  }
-
+  const expr = (await import(path.resolve(file))).default;
   if (!Stg.isExpr(expr)) {
-    console.error("Invalid STG expression");
-    return Deno.exit(1);
+    throw new Error("Invalid STG expression");
   }
 
   try {
@@ -28,4 +19,7 @@ async function main() {
   }
 }
 
-main();
+main().catch((err: unknown) => {
+  console.error(err instanceof Error ? err.message : err);
+  Deno.exit(1);
+});
