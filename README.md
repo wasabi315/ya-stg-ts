@@ -5,11 +5,12 @@ Yet another toy STG interpreter
 ## Prerequisite
 
 - deno
+- velociraptor
 
 ## Example
 
 ```
-deno run --allow-read src/main.ts programs/fact.ts
+vr eval programs/fact.ts
 ```
 
 ```

@@ -1,0 +1,17 @@
+allow:
+  - read
+
+scripts:
+  eval:
+    desc: Evaluate the given stg program
+    cmd: deno run src/main.ts
+
+  lint: deno lint
+
+  format: deno fmt
+
+  pre-commit:
+    cmd:
+      - vr lint
+      - vr format
+    gitHook: pre-commit

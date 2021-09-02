@@ -119,7 +119,7 @@ export const LF = (
   free: string[],
   updatable: boolean,
   args: string[],
-  expr: Expr,
+  expr: Expr
 ): LF => ({
   free,
   updatable,
@@ -359,7 +359,7 @@ export const AlgAlt = (con1: string, vars: string[], expr: Expr): Alt => ({
   },
   matchLit() {
     throw new Error(
-      "Bad alternative: A primitive value was checked against an algebraic alternative",
+      "Bad alternative: A primitive value was checked against an algebraic alternative"
     );
   },
 });
@@ -367,7 +367,7 @@ export const AlgAlt = (con1: string, vars: string[], expr: Expr): Alt => ({
 export const PrimAlt = (lit1: number, expr: Expr): Alt => ({
   matchCon() {
     throw new Error(
-      "Bad alternative: A non-primitive value was checked against a primitive alternative",
+      "Bad alternative: A non-primitive value was checked against a primitive alternative"
     );
   },
   matchLit(lit2) {
