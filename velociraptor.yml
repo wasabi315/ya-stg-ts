@@ -6,12 +6,20 @@ scripts:
     desc: Evaluate the given stg program
     cmd: deno run src/main.ts
 
-  lint: deno lint
+  lint:
+    desc: Lints files
+    cmd: deno lint
 
-  format: deno fmt
+  fmt:
+    desc: Formats files
+    cmd: deno fmt
 
   pre-commit:
-    cmd:
-      - vr lint
-      - vr format
+    cmd: |
+      FILES=$(git diff --staged --name-only --diff-filter=ACMR "*.ts")
+          [ -z "$FILES" ] && exit 0
+          echo "$FILES" | xargs deno lint
+          echo "$FILES" | xargs deno fmt
+          # echo "$FILES" | xargs git add
+    desc: Lints and formats staged files
     gitHook: pre-commit
